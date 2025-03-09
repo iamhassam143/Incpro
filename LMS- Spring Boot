@@ -1,0 +1,323 @@
+create a projject of lms using following tech stacks
+springboot, hibernate, h2 database.
+
+
+develop a logical restful api using above tech stack to manage library records
+
+required dependencies:
+spring web, data jpa, h2 database, dev tools
+
+entity design
+user: uid, uname, uadd, mobno
+book: bid, title, status, borrowed date, return date
+admin: admid, admname
+
+
+api endpoints:
+/admin/
+-retrieve all books
+-retrieve all users
+-retrieve user by id (including book data)
+-retrieve book by id (including user data)
+
+/user/
+-issued book by id (print message for user about return date)
+-return book
+
+
+*conditions
+one user can
+-issue only 1 book per day
+-issue only 4 books per month
+-return a book or books within a month of issue
+-append basic apis like crud of user, book also 
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+I'll provide a basic structure for your LMS (Library Management System) project using **Spring Boot, Hibernate, and H2 Database**. The project will include **RESTful APIs** to manage users, books, and admins while following the mentioned conditions.
+
+---
+
+## **Project Setup**
+### **Required Dependencies (in `pom.xml`):**
+```xml
+<dependencies>
+    <!-- Spring Boot Web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Spring Boot JPA (Hibernate) -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- H2 Database -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
+    <!-- Spring Boot DevTools -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+    <!-- Lombok (Optional, for reducing boilerplate code) -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```
+
+---
+
+## **Entity Design**
+### **1. User Entity (`User.java`)**
+```java
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uid;
+    private String uname;
+    private String uadd;
+    private String mobno;
+
+    @OneToMany(mappedBy = "user")
+    private List<Book> borrowedBooks = new ArrayList<>();
+}
+```
+
+---
+
+### **2. Book Entity (`Book.java`)**
+```java
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bid;
+    private String title;
+    private String status;  // "Available" or "Issued"
+    private LocalDate borrowedDate;
+    private LocalDate returnDate;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+}
+```
+
+---
+
+### **3. Admin Entity (`Admin.java`)**
+```java
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Admin {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long admid;
+    private String admname;
+}
+```
+
+---
+
+## **Repository Interfaces**
+### **1. `UserRepository.java`**
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+```
+
+### **2. `BookRepository.java`**
+```java
+@Repository
+public interface BookRepository extends JpaRepository<Book, Long> {
+    List<Book> findByUserUid(Long userId);
+}
+```
+
+### **3. `AdminRepository.java`**
+```java
+@Repository
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+}
+```
+
+---
+
+## **Service Layer**
+### **1. `UserService.java`**
+```java
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+    }
+
+    public String issueBook(Long userId, Long bookId) {
+        User user = getUserById(userId);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found!"));
+
+        // Conditions: Max 4 books per month & 1 per day
+        long issuedCount = bookRepository.findByUserUid(userId).stream()
+                .filter(b -> b.getBorrowedDate().getMonth() == LocalDate.now().getMonth())
+                .count();
+
+        if (issuedCount >= 4) {
+            return "User has already issued 4 books this month!";
+        }
+
+        if (book.getStatus().equals("Issued")) {
+            return "Book is already issued!";
+        }
+
+        book.setUser(user);
+        book.setStatus("Issued");
+        book.setBorrowedDate(LocalDate.now());
+        book.setReturnDate(LocalDate.now().plusDays(30));
+
+        bookRepository.save(book);
+        return "Book issued successfully! Return by: " + book.getReturnDate();
+    }
+
+    public String returnBook(Long userId, Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new RuntimeException("Book not found!"));
+
+        if (!book.getUser().getUid().equals(userId)) {
+            return "This book is not issued by this user!";
+        }
+
+        book.setUser(null);
+        book.setStatus("Available");
+        book.setBorrowedDate(null);
+        book.setReturnDate(null);
+
+        bookRepository.save(book);
+        return "Book returned successfully!";
+    }
+}
+```
+
+---
+
+## **Controller Layer**
+### **1. `AdminController.java`**
+```java
+@RestController
+@RequestMapping("/admin")
+@RequiredArgsConstructor
+public class AdminController {
+    private final UserRepository userRepository;
+    private final BookRepository bookRepository;
+
+    @GetMapping("/books")
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/user/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+    }
+
+    @GetMapping("/book/{id}")
+    public Book getBookById(@PathVariable Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Book not found!"));
+    }
+}
+```
+
+---
+
+### **2. `UserController.java`**
+```java
+@RestController
+@RequestMapping("/user")
+@RequiredArgsConstructor
+public class UserController {
+    private final UserService userService;
+
+    @PostMapping("/{userId}/issue/{bookId}")
+    public ResponseEntity<String> issueBook(@PathVariable Long userId, @PathVariable Long bookId) {
+        return ResponseEntity.ok(userService.issueBook(userId, bookId));
+    }
+
+    @PostMapping("/{userId}/return/{bookId}")
+    public ResponseEntity<String> returnBook(@PathVariable Long userId, @PathVariable Long bookId) {
+        return ResponseEntity.ok(userService.returnBook(userId, bookId));
+    }
+}
+```
+
+---
+
+## **Database Configuration (`application.properties`)**
+```properties
+spring.datasource.url=jdbc:h2:mem:lmsdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+```
+
+---
+
+## **Testing APIs in Postman**
+1. **Retrieve all books**:  
+   `GET http://localhost:8080/admin/books`
+
+2. **Retrieve all users**:  
+   `GET http://localhost:8080/admin/users`
+
+3. **Issue book to user**:  
+   `POST http://localhost:8080/user/1/issue/2`
+
+4. **Return book**:  
+   `POST http://localhost:8080/user/1/return/2`
+
+---
+
+## **Conclusion**
+This project provides a **basic Library Management System** with CRUD operations and **logical constraints** for issuing and returning books. You can extend it further by adding **JWT authentication**, **email notifications**, or integrating it with **React/Angular** for a front-end. 🚀 Let me know if you need any modifications! 😊
