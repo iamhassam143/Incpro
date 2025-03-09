@@ -1,0 +1,98 @@
+In Java, the **Collection Framework** defines several key interfaces like `List`, `Set`, `Queue`, and `Map`. These interfaces have various implementations (subclasses) that provide concrete data structures and algorithms. Below is a breakdown of the sub-classes and interfaces for each of the core interfaces: `List`, `Set`, `Queue`, and `Map`.
+
+### 1. **`List` Interface** (Ordered collection of elements with duplicates allowed)
+
+#### Subclasses/Implementations of `List`:
+- **`ArrayList`**: A resizable array that allows random access to elements.
+- **`LinkedList`**: A doubly linked list implementation of the `List` interface.
+- **`Vector`**: A growable array of objects, similar to `ArrayList` but synchronized.
+- **`Stack`**: A subclass of `Vector` that implements a stack (LIFO) structure.
+  
+#### Related Interfaces:
+- **`RandomAccess`**: Marker interface indicating that a `List` supports fast random access (e.g., `ArrayList`).
+- **`Iterable`**: The `List` interface extends `Iterable`, meaning that lists can be iterated using an iterator.
+
+### 2. **`Set` Interface** (Collection of unique elements, no duplicates)
+
+#### Subclasses/Implementations of `Set`:
+- **`HashSet`**: A set backed by a hash table (does not guarantee the order of elements).
+- **`LinkedHashSet`**: A set that maintains insertion order using a linked list.
+- **`TreeSet`**: A set implemented using a red-black tree, which ensures elements are sorted.
+
+#### Related Interfaces:
+- **`NavigableSet`**: Extends `SortedSet`, providing methods to navigate through the set (e.g., `TreeSet`).
+- **`SortedSet`**: Extends `Set` and defines methods for handling sorted sets (e.g., `TreeSet`).
+
+### 3. **`Queue` Interface** (A collection designed for holding elements prior to processing, generally follows FIFO)
+
+#### Subclasses/Implementations of `Queue`:
+- **`PriorityQueue`**: A queue that orders elements according to their natural ordering or a comparator.
+- **`LinkedList`**: Implements `Queue` and `Deque` (double-ended queue), allowing for both FIFO and LIFO operations.
+- **`ArrayDeque`**: A resizable array implementation of the `Deque` interface (Double Ended Queue).
+- **`ConcurrentLinkedQueue`**: A non-blocking, thread-safe queue that uses CAS (Compare-And-Swap) to avoid locking.
+
+#### Related Interfaces:
+- **`Deque`**: Extends `Queue` to allow elements to be added or removed from both ends (e.g., `ArrayDeque`, `LinkedList`).
+- **`BlockingQueue`**: A `Queue` designed for handling concurrent processing (e.g., `ArrayBlockingQueue`, `LinkedBlockingQueue`).
+- **`TransferQueue`**: A special type of `BlockingQueue` used for transferring elements between threads.
+- **`Queue` extends `Collection`**: This allows queues to also inherit the methods provided by `Collection` (like `add`, `remove`, etc.).
+
+### 4. **`Map` Interface** (Collection of key-value pairs, each key is unique)
+
+#### Subclasses/Implementations of `Map`:
+- **`HashMap`**: A map backed by a hash table (unsorted, allows null values and keys).
+- **`LinkedHashMap`**: A map that maintains the order of elements based on their insertion order.
+- **`TreeMap`**: A map that uses a red-black tree to store the elements in sorted order based on keys.
+- **`Hashtable`**: A legacy, synchronized implementation of `Map` (not commonly used in modern applications).
+- **`ConcurrentHashMap`**: A thread-safe, highly concurrent version of `HashMap`.
+
+#### Related Interfaces:
+- **`SortedMap`**: Extends `Map` and provides methods for working with sorted maps (e.g., `TreeMap`).
+- **`NavigableMap`**: Extends `SortedMap` to allow navigation methods (e.g., `TreeMap`).
+- **`Map.Entry`**: Defines the key-value pairs stored in a `Map`. Every `Map` provides an `entrySet()` method that returns a set of `Map.Entry` objects.
+
+### Summary of Hierarchy
+
+#### **`List` Interface**:
+- Subclasses:
+  - `ArrayList`
+  - `LinkedList`
+  - `Vector`
+  - `Stack`
+- Related Interfaces:
+  - `RandomAccess`
+  - `Iterable`
+
+#### **`Set` Interface**:
+- Subclasses:
+  - `HashSet`
+  - `LinkedHashSet`
+  - `TreeSet`
+- Related Interfaces:
+  - `NavigableSet`
+  - `SortedSet`
+
+#### **`Queue` Interface**:
+- Subclasses:
+  - `PriorityQueue`
+  - `LinkedList`
+  - `ArrayDeque`
+  - `ConcurrentLinkedQueue`
+- Related Interfaces:
+  - `Deque`
+  - `BlockingQueue`
+  - `TransferQueue`
+
+#### **`Map` Interface**:
+- Subclasses:
+  - `HashMap`
+  - `LinkedHashMap`
+  - `TreeMap`
+  - `Hashtable`
+  - `ConcurrentHashMap`
+- Related Interfaces:
+  - `SortedMap`
+  - `NavigableMap`
+  - `Map.Entry`
+
+This structure organizes the main interfaces and their subclasses or implementations, allowing you to understand how they extend and relate to each other within the Java Collections Framework.
