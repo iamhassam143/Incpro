@@ -1,0 +1,78 @@
+In Java, `ArrayList` is part of the `java.util` package, and it extends `AbstractList`, which implements the `List` interface. The `List` interface is part of the `java.util` package as well. Let’s break down the hierarchy and list the operations and methods you can use based on the parent classes and interfaces.
+
+### 1. **`ArrayList` (Child class)**:
+   - `ArrayList` is a resizable array that allows dynamic growth and implements the `List` interface and extends `AbstractList`. It provides methods to manipulate the contents of the list.
+
+### 2. **`AbstractList` (Parent class of `ArrayList`)**:
+   - `AbstractList` is an abstract implementation of the `List` interface and provides default implementations for some methods of `List`, but not all. `AbstractList` implements the `List` interface, so all `ArrayList` operations available from `AbstractList` will also be available in `ArrayList`.
+
+   **Methods inherited from `AbstractList`:**
+   - `add(E element)` – Adds the element to the end of the list.
+   - `remove(Object o)` – Removes the first occurrence of the specified element.
+   - `get(int index)` – Returns the element at the specified position.
+   - `set(int index, E element)` – Replaces the element at the specified position with the given element.
+   - `size()` – Returns the number of elements in the list.
+   - `clear()` – Removes all elements from the list.
+   - `isEmpty()` – Returns `true` if the list contains no elements.
+   - `indexOf(Object o)` – Returns the index of the first occurrence of the specified element.
+   - `lastIndexOf(Object o)` – Returns the index of the last occurrence of the specified element.
+   - `subList(int fromIndex, int toIndex)` – Returns a view of the portion of the list between the specified indices.
+
+### 3. **`List` (Interface, Parent of `AbstractList` and `ArrayList`)**:
+   - The `List` interface defines the core functionality for any list-like collection (including `ArrayList`).
+
+   **Methods in the `List` interface:**
+   - `add(int index, E element)` – Inserts the specified element at the specified position in the list.
+   - `addAll(int index, Collection<? extends E> c)` – Adds all elements of the specified collection starting from the given index.
+   - `remove(int index)` – Removes the element at the specified position.
+   - `get(int index)` – Retrieves the element at the specified position.
+   - `set(int index, E element)` – Replaces the element at the specified position.
+   - `contains(Object o)` – Checks if the list contains the specified element.
+   - `containsAll(Collection<?> c)` – Checks if the list contains all elements of the specified collection.
+   - `iterator()` – Returns an iterator to iterate through the elements in the list.
+   - `listIterator()` – Returns a list iterator to iterate through the list.
+   - `toArray()` – Converts the list into an array.
+
+### 4. **`Collection` (Interface, Parent of `List` and `AbstractList`)**:
+   - `Collection` is a root interface of the Java Collections Framework, which provides basic collection functionality. `List` extends `Collection`.
+
+   **Methods inherited from `Collection`:**
+   - `add(E element)` – Adds an element to the collection.
+   - `addAll(Collection<? extends E> c)` – Adds all elements of the specified collection.
+   - `clear()` – Removes all elements from the collection.
+   - `contains(Object o)` – Checks if the collection contains a specific element.
+   - `containsAll(Collection<?> c)` – Checks if the collection contains all elements from another collection.
+   - `isEmpty()` – Returns `true` if the collection is empty.
+   - `remove(Object o)` – Removes a single instance of the specified element from the collection.
+   - `removeAll(Collection<?> c)` – Removes all elements that are contained in the specified collection.
+   - `retainAll(Collection<?> c)` – Retains only the elements in this collection that are contained in the specified collection.
+   - `size()` – Returns the number of elements in the collection.
+   - `toArray()` – Converts the collection into an array.
+
+### 5. **`AbstractCollection` (Parent class of `AbstractList` and `Collection`)**:
+   - `AbstractCollection` provides a skeletal implementation of the `Collection` interface and implements most of the methods in the `Collection` interface.
+
+   **Methods inherited from `AbstractCollection`:**
+   - `isEmpty()` – Returns `true` if the collection contains no elements.
+   - `size()` – Returns the number of elements in the collection.
+   - `toArray()` – Converts the collection into an array.
+
+### Summary of Methods Available on `ArrayList` (Inherited from Its Parents):
+
+- **From `ArrayList` directly**: 
+  - `trimToSize()` – Reduces the capacity of the `ArrayList` to the current size.
+  - `ensureCapacity(int minCapacity)` – Ensures that the list has enough capacity to hold at least the specified number of elements.
+
+- **From `AbstractList`**:
+  - Methods like `add()`, `remove()`, `get()`, `set()`, `clear()`, `isEmpty()`, `indexOf()`, etc.
+
+- **From `List`**:
+  - Methods like `add(int index, E element)`, `remove(int index)`, `get(int index)`, `contains()`, `listIterator()`, etc.
+
+- **From `Collection`**:
+  - Methods like `add()`, `contains()`, `size()`, `clear()`, `isEmpty()`, `remove()`, `toArray()`, etc.
+
+- **From `AbstractCollection`**:
+  - Methods like `isEmpty()`, `size()`, `toArray()`, etc.
+
+These are the core methods you can use directly or through inheritance when working with an `ArrayList` in Java.
