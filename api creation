@@ -1,1 +1,52 @@
+A few key decisions need to be made before you can start building your new API. In this preparation phase
+you should define the application domain semantics, decide what API architectural style you are going to use, and form an API style guide.
+In organizations with many APIs, the formalization of these steps leads to increased consistency and improves the overall developer experience.
+
+Define Domain Semantics
+What is the thing you’re describing? Is it a chair or a bench? At first sight, it may feel obvious or even
+trivial to define the semantics of your application domain. However, make sure you list all the terms
+used in your application and get everybody on the same page of what they mean.
+Being clear on what things are and what they mean is the foundation of all communication—even
+more so when it comes to an API.
+Choose Architectural Style
+What will be the architecture style of your API? Will it be event-driven, URI CRUD-based or a Hypermedia
+API? Each style has its advantages and disadvantages. There is no silver bullet. Functionality aside,
+some architectural styles are easier and faster to implement, while others ofer benefits like scalability
+and evolvability.
+Pick the appropriate architectural style for your application and make sure it is clearly communicated.
+Formalize Style Guide
+The Style Guide defines the conventions of your API—such as the media type you’re going to use, the
+kind of authentication you will put in place, or the way you will paginate results. It also covers the
+naming conventions and URI formatting. Think of it as a coding style guide for your API.
+Write down the conventions in a clear and concise form. 
+
+It is time to start carving out the API. In this phase,
+you will define how the API will look, create its stub
+implementation, and verify it with everybody involved
+in the workflow. 
+
+What resources are exposed in your API? Look at the terms in your application domain.
+It’s likely that not all of the terms are resources on their own. Some of them represent resource
+attributes or afordances (i.e. the actions a resource might aford).
+For example: A door may be a resource, whereas color and door handle are its attributes,
+and open and close are the actions the door may aford.
+Break down the domain terms, create their data models, and where appropriate, mark these models
+as resources.
+Define Resource States
+Ofen a resource may have more than one state. The door may be closed or opened. A message
+may be drafed, sent, or archived. 
+
+
+You may draw a finite state machine diagram to identify the states of your resources and discover the
+relations between resources. This state machine diagram will help to recognize what resources are
+actually needed. In addition, the finite state machine diagram helps you to understand how the API
+might be implemented.
+Preparation Design & Prototype Development Delivery Consumption Analysis
+Write API Description
+At this point, you should have a clear idea of your API’s architectural style, resources, relations,
+and the API style guide. It is time to formalize these in one of the API Description formats like API
+Blueprint or Swagger. Using an API Description format helps you to design and prototype your API
+without writing any code.
+
+
 
